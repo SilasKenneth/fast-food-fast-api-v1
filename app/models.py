@@ -193,7 +193,7 @@ class Order(object):
             return None
         res = []
         for user in users:
-            res += user.orders
+            res += users[user].orders
         return res
 
 
