@@ -1,0 +1,16 @@
+
+language: python
+
+python:
+  - "3.5.2"
+
+before_script:
+  - createdb testdb;  
+
+install:
+  - pip install -r requirements.txt
+
+script: 
+  - python -m pytest --cov-report term-missing --cov=app
+
+cache: pip
