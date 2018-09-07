@@ -20,7 +20,7 @@ class AddressResource(Resource):
         if users == []:
             return {"code" : "404", "message": "No addresses were found in the database"}, 200
         for user in users:
-            res += user.addresses
+            res += users[user].addresses
         if len(res) == 0:
             return {"code" : "404", "message": "No addresses were found in the database"}, 200
         return {"ok": True, "data": [address.json for address in res]}, 200
