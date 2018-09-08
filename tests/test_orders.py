@@ -3,19 +3,22 @@ import pytest
 # from tests.basetest import BaseTest
 try:
     from tests.basetest import BaseTest
-except:
+except Exception as ex:
     pass
-from basetest import BaseTest
+try:
+    from basetest import BaseTest
+except Exception as ex:
+    pass
 
 class TestOrders(BaseTest):
     def test_user_can_order_successfully(self):
         order = Order(self.gloria, self.gloria_address)
-        order.place(self.silas.id, "1")
+        order.place(self.silas.id,1, "1")
         self.assertEqual(1, 1)
     @pytest.mark.skip("Skip this")
     def test_user_can_order_multiple_items(self):
         order = Order(self.silas, self.silas_address)
-        order.place(self.silas.id, "1,2,4")
+        order.place(self.silas.id,1, "1,2,4")
         self.assertEqual(1, 1)
     def test_user_can_order_one_item(self):
         pass
