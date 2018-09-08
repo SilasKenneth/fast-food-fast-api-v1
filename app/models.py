@@ -11,7 +11,6 @@ class Base(object):
 class User(Base):
     def __init__(self, username, email, password):
         self.username = username
-        userne = self.username
         self.id = db.users.get(username).id if self.username in db.users else len(db.users) + 1
         self.password = generate_password_hash(password)
         self.email = email
@@ -92,7 +91,7 @@ class Address(Base):
 
     def __init__(self, town, street, phone):
         """ Constructor for the model class"""
-        self.id = len(db.get_item("addresses")) + 1
+        self.id = max(db.address_maps) + 1 if len(db.address_maps) > 0 else 1
         self.town = town
         self.street = street
         self.phone = phone
@@ -110,26 +109,28 @@ class Address(Base):
     def find_by_id(cls, address_id):
         addresses = db.address_maps
         users = db.users
+        print(addresses)
         if addresses is None:
             return None
         if address_id in addresses:
             owner = addresses[address_id]
+            print(owner)
             if owner not in users:
                 return None
-            current_addresses = owner.addresses
+            current_addresses = users[owner].addresses
             if current_addresses is None:
                 return None
             if len(current_addresses) == 0:
                 return None
             for address in current_addresses:
-                if current_addresses[address].id == address_id:
+                if address.id == address_id:
                     return address
         return None
 
 
 class Order(object):
     def __init__(self, order_by, address):
-        self.id = id
+        self.id = max(db.order_maps) + 1 if len(db.order_maps) > 0 else 1
         self.ordered_by = order_by
         self.date_made = datetime.datetime.utcnow()
         self.last_update = datetime.datetime.utcnow()
@@ -143,18 +144,18 @@ class Order(object):
         return {
             "id": self.id,
             "order_by": self.ordered_by,
-            "date_ordered": self.date_made,
+            "date_ordered": str(self.date_made),
             "address": self.address.json,
             "items" : [item.json for item in self.items],
             "total" : str(self.total),
-            "status" : self.status
+            "status" : str(self.status)
         }
-    @property
+
     def json1(self):
         return {
             "id": self.id,
             "order_by": self.ordered_by,
-            "date_ordered": self.date_made,
+            "date_ordered": str(self.date_made).split(" ")[0],
             "total" : str(self.total),
             "status" : self.status
         }
@@ -200,7 +201,7 @@ class Product(object):
 
     def __init__(self, product_name, product_description, unit_price):
         """Constructor for the product model"""
-        self.id = len(db.get_item("products")) + 1
+        self.id = len(db.products) + 1
         self.product_name = product_name
         self.product_description = product_description
         self.last_update = datetime.datetime.utcnow()
@@ -222,8 +223,8 @@ class Product(object):
         if len(products) == 0:
             return None
         for product in products:
-            if product.id == id:
-                return product
+            if products[product].id == id:
+                return products[product]
         return None
 
     @classmethod

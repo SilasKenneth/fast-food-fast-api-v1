@@ -9,7 +9,7 @@ class ProductResource(Resource):
     parser.add_argument("product_description", required=True, help="Missing product description")
     parser.add_argument("unit_price", required=True, help="Missing prices")
 
-    def post(self):
+    def post(self, product_id=None):
         args = ProductResource.parser.parse_args()
         product_name = args.get("product_name")
         product_description = args.get("product_description")
@@ -18,12 +18,11 @@ class ProductResource(Resource):
         db.add_product(pro)
         return {"ok": True, "message": "The product was saved successfully ", "data": pro.json}, 200
 
-    def get(self):
+    def get(self, product_id=None):
         products = db.products
         if len(products) == 0:
-            return {"ok": True, "code": "404", "message": "No rrecords"}
+            return {"ok": True, "code": "404", "message": "No products are currently available in our database"}
         res = []
-        print(products)
         for product in products:
             res.append(products[product].json)
         return res

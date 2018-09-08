@@ -22,7 +22,7 @@ def create_app(config_name):
         from app.resources.addresses import AddressResource
         from app.resources.users import UserResource
     api.add_resource(ProductResource, "/api/v1/products")
-    api.add_resource(OrderResource, "/api/v1/orders")
+    api.add_resource(OrderResource, "/api/v1/orders", "/api/v1/orders/<int:order_id>")
     api.add_resource(AddressResource, "/api/v1/addresses", "/api/v1/addresses/<int:address_id>")
     api.add_resource(UserResource, "/api/v1/users", "/api/v1/users/<int:user_id>")
 
