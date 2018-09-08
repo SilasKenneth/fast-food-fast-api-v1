@@ -13,5 +13,5 @@ elif env_setting.strip() == "":
 config_name = env_setting
 app = create_app(config_name)
 
-#if __name__ == '__main__':
-#    app.run(debug=config.configurations[config_name].DEBUG)
+if __name__ == '__main__':
+    app.run(debug=config.configurations[config_name].DEBUG)
