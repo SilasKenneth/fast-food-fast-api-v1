@@ -108,16 +108,15 @@ class Address(Base):
 
     @classmethod
     def find_by_id(cls, address_id):
-        addresses = db.get_item("address_maps")
-        users = db.get_item("users")
+        addresses = db.address_maps
+        users = db.users
         if addresses is None:
             return None
         if address_id in addresses:
-            owner = addresses[address_id][0]
-            offset = addresses[address_id][-1]
+            owner = addresses[address_id]
             if owner not in users:
                 return None
-            current_addresses = None
+            current_addresses = owner.addresses
             if current_addresses is None:
                 return None
             if len(current_addresses) == 0:
