@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, redirect
+from flask import Flask, jsonify, redirect, render_template
 from flask_restful import Api
 from flask_cors import CORS
 
@@ -41,6 +41,6 @@ def create_app(config_name):
 
     @app.route("/")
     def home():
-        return jsonify({"message": "Hello welcome to my api"}), 200
+        return render_template("index.html")
 
     return app
