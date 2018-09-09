@@ -25,13 +25,16 @@ class UserResource(Resource):
 
     def get(self, user_id=None):
         users = User.all()
-        print(users)
+        # print(users)
         if len(users) == 0:
             return {"code": "404", "message": "No user records exist in our database"}, 200
         if user_id is None:
             return {"ok": True, "data": users}, 200
-        get_present = db.user_ids.get(user_id)
-        user = db.users.get(get_present, None)
+        user = None
+        for user in users:
+            # print(user)
+            if user.get("id", None)== user_id:
+                return {"ok" : True, "code" : 200, "data" : user}, 200
         if user is None:
             return {"ok": False, "message": "The user you are looking for doesnt exist", "code": "404"}, 200
         return {"ok": True, "data": user.json}, 200

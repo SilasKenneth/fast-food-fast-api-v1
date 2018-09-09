@@ -24,13 +24,14 @@ class OrderResource(Resource):
         order_batch = user.orders
         res = []
         for order in order_batch:
-            if order.id == order_id:
-                res.append(order.json)
+            if order is not None:
+                if order.id == order_id:
+                    res.append(order.json)
         return res, 200
 
     def post(self, order_id=None):
         empty = lambda x: len(x.strip()) == 0
-        if order_id is None:
+        if order_id is None or order_id == 0:
             self.parser.add_argument("user_id", required=True, help="You cannot place an order anonymously")
             self.parser.add_argument("address", required=True, help="Please specify an address to ship your order to")
             self.parser.add_argument("items", required=True, help="You cannot order nothing please specify some items")
@@ -40,16 +41,16 @@ class OrderResource(Resource):
             items = args.get("items")
             if empty(user_id) or empty(address) or empty(items):
                 return {"ok": False, "code": "400",
-                        "message": "Please make sure you have no missing requirements for an order"}, 200
+                        "message": "Please make sure you have no missing requirements for an order"}, 400
             user = User.get_by_id(int(user_id))
             if user is None:
                 return {"ok": False, "code": "400",
-                        "message": "Could not recognize the person who's trying to place the order"}, 200
+                        "message": "Could not recognize the person who's trying to place the order"}, 400
             add = Address.find_by_id(int(address))
             print(add)
             if add is None:
                 return {"ok": False, "code": "404",
-                        "message": "Could not find the specified address first add an address"}, 200
+                        "message": "Could not find the specified address first add an address"}, 400
             items = items.split(",")
 
             def found(y):
@@ -61,7 +62,7 @@ class OrderResource(Resource):
             if not prods:
                 return {"code": "404", "ok": False,
                         "message": "The products you specified don't exist or you just never specified any please "
-                                   "check again"}, 200
+                                   "check again"}, 400
             order = Order(db.users[user].id, add)
             total = 0.00
             for p in prods:
@@ -71,8 +72,33 @@ class OrderResource(Resource):
             db.order_maps.update({order.id: user})
             db.users[user].orders.append(order)
         else:
-            self.parser.add_argument("status", required=True,
+            parser = reqparse.RequestParser()
+            parser.add_argument("status", required=True,
                                      help="Please specify whether to accept, reject or mark order as complete")
-            order = Order.get_by_id(order_id)
+            args = parser.parse_args()
+            status = args.get("status")
+            if len(status.strip()) == 0:
+                return {"code" : 400, "ok" : False, "message" : "Please specify a valid status"}, 400
+            order = db.order_maps.get(order_id)
             if order is None:
-                return {"code": "404", "ok": False, "message": "Couldn't find the order specified try another"}, 200
+                return {"code": "404", "ok": False, "message": "Couldn't find the order specified try another"}, 400
+            for i in range(len(db.users[order].orders)):
+                if db.users[order].orders[i] is not None:
+                    if db.users[order].orders[i].id == order_id:
+                        db.users[order].orders[i].status = status
+                        return {"code" : 200, "ok" : True, "message" : "The order was successfully updated", "data" : db.users[order].orders[i].json}, 200
+            return {"code" : 400, "ok" : False, "message" : "Could not find the order specified"}, 400
+
+    def delete(elf, order_id):
+        user = db.order_maps.get(order_id, None)
+        who = db.users.get(user, None)
+        if not user or not who:
+            return {"code": "404", "ok" : False, "message" : "Incorrect order id specified. Try again"}, 400
+        for i in range(len(who.orders)):
+            if who.orders[i].id == order_id:
+                copy = who.orders[i]
+                who.orders[i] = None
+                return {"code" : 200, "ok" : True, "message" : "The order was succcessfully deleted", "data": copy.json}, 200
+        return {"code" : 400, "ok": False, "message": "Could not find the order specified. Please try another"}, 400
+
+
