@@ -28,6 +28,7 @@ class User(Base):
 
     def add_address(self, address):
         self.addresses.append(address)
+        db.address_maps.update({address.id: self.username})
 
     @property
     def json(self):
@@ -77,7 +78,7 @@ class User(Base):
     @classmethod
     def all(cls):
         users = db.get_item("users")
-        print(users)
+        # print(users)
         if users == []:
             return []
         res = []
@@ -109,12 +110,12 @@ class Address(Base):
     def find_by_id(cls, address_id):
         addresses = db.address_maps
         users = db.users
-        print(addresses)
+        # print(addresses)
         if addresses is None:
             return None
         if address_id in addresses:
             owner = addresses[address_id]
-            print(owner)
+            # print(owner)
             if owner not in users:
                 return None
             current_addresses = users[owner].addresses
