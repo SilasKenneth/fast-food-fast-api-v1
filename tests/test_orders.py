@@ -1,6 +1,8 @@
 from app.models import Order
+import json
 import pytest
 # from tests.basetest import BaseTest
+from app.db import db
 try:
     from tests.basetest import BaseTest
 except Exception as ex:
@@ -15,19 +17,28 @@ class TestOrders(BaseTest):
         order = Order(self.gloria, self.gloria_address)
         order.place(self.silas.id,1, "1")
         self.assertEqual(1, 1)
-    @pytest.mark.skip("Skip this")
+    # @pytest.mark.skip("Skip this")
     def test_user_can_order_multiple_items(self):
         order = Order(self.silas, self.silas_address)
         order.place(self.silas.id,1, "1,2,4")
         self.assertEqual(1, 1)
     def test_user_can_order_one_item(self):
-        pass
+        response = self.client.get("/api/v1/users", content_type="application/json")
+        self.assertEqual(response.status_code, 200)
 
     def test_user_cannot_order_without_address(self):
-        pass
+        response = self.client.post("/api/v1/orders", data=json.dumps({"user_id" : 1, "items": "1,2,3", "address": ""}), content_type="application/json")
+        last_order = max(db.order_maps) if len(db.order_maps) > 0 else None
+        # print(response.data)
+        self.assertEqual(None, last_order)
+        self.assertEqual(response.status_code, 400)
 
     def test_user_cannot_order_nothing(self):
-        pass
+        response = self.client.post("/api/v1/orders", data=json.dumps({"user_id": 1, "items": "", "address": "1"}), content_type="application/json")
+        last_order = max(db.order_maps) if len(db.order_maps) > 0 else None
+        print(response.data)
+        self.assertEqual(None, last_order)
+        self.assertEqual(response.status_code, 400)
 
     def test_order_update_admin(self):
         pass
@@ -39,4 +50,10 @@ class TestOrders(BaseTest):
         pass
 
     def test_can_delete_order(self):
-        pass
+        place = self.client.post("/api/v1/orders", data=json.dumps({"user_id": 1, "items": "1,2,3", "address": "1"}), content_type="application/json")
+        data = self.client.get("/api/v1/orders/1", content_type="application/json")
+        response = self.client.delete("/api/v1/orders/1", content_type="application/json")
+        # print(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data.status_code, 200)
+        self.assertEqual(place.status_code, 200)
