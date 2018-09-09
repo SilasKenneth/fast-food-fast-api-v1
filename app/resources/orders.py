@@ -71,6 +71,7 @@ class OrderResource(Resource):
             order.total = total
             db.order_maps.update({order.id: user})
             db.users[user].orders.append(order)
+            return {"code": 200, "ok" : True, "message" : "You successfully placed the order thank you", "data": order.json}
         else:
             parser = reqparse.RequestParser()
             parser.add_argument("status", required=True,
