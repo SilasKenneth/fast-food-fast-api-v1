@@ -25,6 +25,7 @@ class Database(object):
 
     def add_product(self, product):
         """Method to add a product to our database"""
+        product.id = len(self.products) + 1
         self.products.update({len(self.products) + 1: product})
 
     def get_item(self, table):
