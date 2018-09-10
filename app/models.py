@@ -9,9 +9,12 @@ class Base(object):
 
 
 class User(Base):
+    """The user model class"""
     def __init__(self, username, email, password):
+        """Constructor for the user class"""
         self.username = username
-        self.id = db.users.get(username).id if self.username in db.users else len(db.users) + 1
+        self.id = db.users.get(username).id \
+            if self.username in db.users else len(db.users) + 1
         self.password = generate_password_hash(password)
         self.email = email
         self.date_created = datetime.datetime.utcnow()
@@ -20,35 +23,42 @@ class User(Base):
         self.is_admin = False
         self.orders = []
 
-    def update_address(self, id, new_address):
-        if len(self.addresses) < id:  # In this case the address Id doesn't exist
+    def update_address(self, user_id, new_address):
+        """Update a given user's address"""
+
+        if len(self.addresses) < user_id:
+            # In this case the address Id doesn't exist
             return False
         self.addresses[id - 1] = new_address
         return True
 
     def add_address(self, address):
+        """Add an address to a given user"""
         self.addresses.append(address)
         db.address_maps.update({address.id: self.username})
 
     @property
     def json(self):
-        dummy_address = Address("Fake town", "Fake street", "01929292")
+        """Return a JSON Serializable version of the class"""
         return {
             "id": self.id,
             "username": self.username,
             "email": self.email,
             "password": self.password,
-            "addresses": [address.json for address in self.addresses if type(address) == type(dummy_address)]
+            "addresses": [address.json for address in self.addresses
+                          if isinstance(address, Address)]
         }
 
     @property
     def json_without_id(self):
+        """Get A JSON Serializable version of the class without the ID field"""
         res = self.json
         del res['id']
         return res
 
     @classmethod
     def get_by_id(cls, user_id):
+        """Get a user by an ID"""
         users = db.users
         if users is None:
             return None
@@ -59,24 +69,23 @@ class User(Base):
 
     @classmethod
     def get_by_email(cls, email):
-        users = db.get_item("users")
+        """Get a user by email"""
+        users = db.users
         if users is None:
             return None
-        if email in db.get_item("emails"):
+        if email in db.emails:
             return db.users.get(db.emails.get(email, None), None)
         return None
 
-    def save(self):
-        if self.email in db.emails:
-            return "user_already_exist"
-
     def delete(self):
+        """Delete a user from the database"""
         del db.user_ids[self.id]
         del db.emails[self.email]
         del db.users[self.username]
 
     @classmethod
     def all(cls):
+        """Get all users from the database"""
         users = db.get_item("users")
         # print(users)
         if users == []:
@@ -99,6 +108,7 @@ class Address(Base):
 
     @property
     def json(self):
+        """Return a json serializable version of the class"""
         return {
             "id": str(self.id),
             "town": str(self.town),
@@ -108,6 +118,7 @@ class Address(Base):
 
     @classmethod
     def find_by_id(cls, address_id):
+        """Get an address by id"""
         addresses = db.address_maps
         users = db.users
         # print(addresses)
@@ -130,7 +141,10 @@ class Address(Base):
 
 
 class Order(object):
+    """The order model class"""
+
     def __init__(self, order_by, address):
+        """Constructor of the order class"""
         self.id = max(db.order_maps) + 1 if len(db.order_maps) > 0 else 1
         self.ordered_by = order_by
         self.date_made = datetime.datetime.utcnow()
@@ -142,26 +156,29 @@ class Order(object):
 
     @property
     def json(self):
+        """Return a JSON serializable version of the class"""
         return {
             "id": self.id,
             "order_by": self.ordered_by,
             "date_ordered": str(self.date_made),
             "address": self.address.json,
-            "items" : [item.json for item in self.items],
-            "total" : str(self.total),
-            "status" : str(self.status)
+            "items": [item.json for item in self.items],
+            "total": str(self.total),
+            "status": str(self.status)
         }
 
     def json1(self):
+        """Return a dictionary representation of the class without items"""
         return {
             "id": self.id,
             "order_by": self.ordered_by,
             "date_ordered": str(self.date_made).split(" ")[0],
-            "total" : str(self.total),
-            "status" : self.status
+            "total": str(self.total),
+            "status": self.status
         }
 
     def place(self, user_id, address_id, products):
+        """A method to process the placing of orders"""
         user = User.get_by_id(user_id)
         if user is None:
             return "user_not_exist"
@@ -173,8 +190,9 @@ class Order(object):
         self.items = products
 
     @classmethod
-    def get_by_id(cls, id):
-        order_exist = db.order_maps.get(id)
+    def get_by_id(cls, order_id):
+        """A method to get an order based on it's id"""
+        order_exist = db.order_maps.get(order_id)
         if order_exist is None:
             return None
         orders = db.users.get(order_exist, None)
@@ -182,7 +200,7 @@ class Order(object):
             return None
         orders = orders.orders
         for order in orders:
-            if order.id == id:
+            if order.id == order_id:
                 return order
         return None
 
@@ -199,7 +217,7 @@ class Order(object):
 
 
 class Product(object):
-
+    """The product model class"""
     def __init__(self, product_name, product_description, unit_price):
         """Constructor for the product model"""
         self.id = len(db.products) + 1
@@ -219,17 +237,19 @@ class Product(object):
         }
 
     @classmethod
-    def get_by_id(cls, id):
+    def get_by_id(cls, product_id):
+        """Get an item by it's id"""
         products = db.products
         if len(products) == 0:
             return None
         for product in products:
-            if products[product].id == id:
+            if products[product].id == product_id:
                 return products[product]
         return None
 
     @classmethod
     def all(cls):
+        """A method to fetch all menu items from the data structure"""
         products = db.products
         if len(products) == 0:
             return None
