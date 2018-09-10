@@ -1,5 +1,5 @@
 from unittest import TestCase
-from app.db import  db
+from app.db import db
 from app import create_app
 
 
@@ -7,7 +7,7 @@ class BaseTest(TestCase):
     def setUp(self):
         self.app = create_app("testing")
         with self.app.app_context():
-            from app.models import (User, Address, Product, Order)
+            from app.models import (User, Address, Product)
         self.client = self.app.test_client()
         self.gloria = User("gloria", "gloria@gmail.com", "gloria")
         self.silas = User("silas", "silaskenn@gmail.com", "Nyamwaro2012")
