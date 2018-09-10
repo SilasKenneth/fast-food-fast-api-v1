@@ -24,8 +24,7 @@ class OrderResource(Resource):
                     "message": "The order requested for "
                                "doesn't exist in our database"}, 200
         """Find where a given order belongs to in an index that
-        maps orders to users and positions in the user's order list
-        """
+        maps orders to users and positions in the users order list"""
         order_batch = user.orders
         res = []
         for order in order_batch:
