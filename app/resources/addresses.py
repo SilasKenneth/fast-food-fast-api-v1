@@ -1,7 +1,6 @@
 from flask_restful import Resource, reqparse
 from app.models import Address, User
 from app.db import db
-from flask import jsonify
 
 
 class AddressResource(Resource):

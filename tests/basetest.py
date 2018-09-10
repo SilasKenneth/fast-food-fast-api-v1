@@ -1,7 +1,7 @@
 from unittest import TestCase
-from app.db  import Database, db
+from app.db import  db
 from app import create_app
-import json
+
 
 class BaseTest(TestCase):
     def setUp(self):
@@ -28,6 +28,7 @@ class BaseTest(TestCase):
         self.database.add_user(self.silas)
         self.silas.add_address(self.silas_address)
         self.test_admin.is_admin = True
+
     def tearDown(self):
         self.database.drop()
 
