@@ -186,7 +186,6 @@ class Order(object):
             return "no_products_selected"
         if len(products) == 0:
             return "no_products_selected"
-        clean_products = []
         self.items = products
 
     @classmethod
