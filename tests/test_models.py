@@ -11,10 +11,9 @@ import random
 class TestModel(BaseTest, TestCase):
 
     def test_can_add_user(self):
-        random_user = "".join([random.choice(string.ascii_lowercase) for i in range(10)])
+        random_user = "jadedness"
         user_test = User(random_user, random_user + "@gmail.com", "silas")
         try_post = self.client.post("/api/v1/users", data=json.dumps(user_test.json), content_type="application/json")
-        route = "/api/v1/users/" + str(user_test.id)
         after_save = self.client.get("/api/v1/users/" + str(user_test.id), content_type="application/json")
         tester = self.client.get("/api/v1/users/2", content_type="application/json")
         print(tester.data)
