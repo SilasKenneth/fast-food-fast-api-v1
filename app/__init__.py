@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, redirect, render_template
+from flask import Flask, jsonify,  render_template
 from flask_restful import Api
 from flask_cors import CORS
 
@@ -6,7 +6,7 @@ import app_config as config
 
 
 def create_app(config_name):
-    """ Create a flask application with certain configuration """
+    """Create a flask application with certain configuration"""
 
     app = Flask(__name__)
     api = Api(app)
