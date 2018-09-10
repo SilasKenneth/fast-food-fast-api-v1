@@ -2,8 +2,6 @@ from flask_restful import Resource, reqparse
 from app.models import User
 from app.db import db
 
-""" This is done in the next challenge"""
-
 
 class UserResource(Resource):
     """The resource class for the User model"""
@@ -21,6 +19,7 @@ class UserResource(Resource):
 
         def empty(x):
             return len(x.strip()) == 0
+
         if empty(username) or empty(email) or empty(password):
             return {"code": "400", "message": "All fields are required"}, 200
         new_user = User(username, email, password)
