@@ -3,7 +3,7 @@ class Database(object):
         self.users = {}
         self.order_maps = {}
         self.address_maps = {}
-        self.products = {}
+        self.menu = {}
         self.emails = {}
         self.user_ids = {}
 
@@ -12,7 +12,7 @@ class Database(object):
         self.users = {}
         self.order_maps = {}
         self.address_maps = {}
-        self.products = {}
+        self.menu = {}
 
     def add_user(self, user):
         """Method to add a user to the database"""
@@ -20,10 +20,10 @@ class Database(object):
         self.emails.update({user.email: user.username})
         self.user_ids.update({user.id: user.username})
 
-    def add_product(self, product):
+    def add_menu_item(self, menu_item):
         """Method to add a product to our database"""
-        product.id = len(self.products) + 1
-        self.products.update({len(self.products) + 1: product})
+        menu_item.id = len(self.menu) + 1
+        self.menu.update({len(self.menu) + 1: menu_item})
 
     def get_item(self, table):
         return getattr(self, table, [])
