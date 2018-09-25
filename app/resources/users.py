@@ -1,8 +1,12 @@
-from flask_restful import Resource, reqparse
-from app.models import User
-from app.db import db
-from flask_jwt_extended import (JWTManager, jwt_required)
+import datetime
+import os
 
+import jwt
+from flask_restful import Resource, reqparse
+
+from app.db import db
+from app.models import User
+from app.utils import validate_username, validate_email, validate_password, empty
 
 
 class SignUpResource(Resource):
@@ -20,16 +24,25 @@ class SignUpResource(Resource):
         email = args.get("email", "")
         password = args.get("password", "")
 
-        def empty(x):
-            return len(x.strip()) == 0
-
         if empty(username) or empty(email) or empty(password):
             return {"code": "400", "message": "All fields are required"}, 200
+        if not validate_email(email):
+            return {"message": "You have entered an invalid email address"}
+        if not validate_username(username):
+            return {"message": "Invalid username, a username should contain"
+                               "and be between 6 to 12 characters long"}, 400
+        if not validate_password(password):
+            return {"message": "Please provide a valid password"
+                               "a valid password contains the following"
+                               "atleast one special character,"
+                               "atleast one lowercase and atleast a number"
+                               "and atleast should be between 6 to 12 characters"
+                               "long"}
         new_user = User(username, email, password)
         db.add_user(new_user)
+        db.emails.update({new_user.email: new_user.username})
         return {"ok": True, "message": "User was successfully saved login to get started",
                 "data": new_user.json}, 200
-
 
 class LoginResource(Resource):
     parser = reqparse.RequestParser()
@@ -45,14 +58,37 @@ class LoginResource(Resource):
         users = User.all()
         # print(users)
         user = None
+        args = self.parser.parse_args()
+        username = args.get("username", "")
+        password = args.get("password", "")
+        key = os.getenv("JWT_SECRET_KEY", "Hacker")
+        if empty(username) or empty(password):
+            return {"message": "Please provide a username or email"
+                               "and a password"}
         if not users:
-            return {"ok": False, "code":403, "message":"Invalid login credentials"}, 403
-        for user in users:
-            # print(user)
-            if user.get("id", None) == user_id:
-                return {"ok": True, "code": 200, "data": user}, 200
-        if user is None:
-            return {"ok": False, "message": "The user you are looking "
-                                            "for doesnt exist",
-                    "code": "404"}, 200
-        return {"ok": True, "data": user.json}, 200
+            return {"ok": False, "code": 403, "message": "Invalid login credentials"}, 403
+        if username in db.users:
+            payload = {
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
+                "iat": datetime.datetime.utcnow(),
+                "data": db.users.get(username)
+            }
+            token = jwt.encode(payload=payload, key=key)
+            return {"token": token, "message": "You are successfuly logged in"}, 200
+        if username in db.emails:
+            user = db.users.get(db.emails.get(username, None), None)
+            if user is None:
+                return {"message": "Invalid login credentials"}, 403
+
+            payload = {
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
+                "iat": datetime.datetime.utcnow(),
+                "data": db.users.get(username)
+            }
+            token = jwt.encode(payload=payload, key=key)
+            return {"token": token, "message": "You are successfully logged in"}, 200
+        return {"message": "Invalid login credentials"}, 403
+
+
+
+
