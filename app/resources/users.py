@@ -7,6 +7,7 @@ from flask_restful import Resource, reqparse
 from app.db import db
 from app.models import User
 from app.utils import validate_username, validate_email, validate_password, empty
+from werkzeug.security import check_password_hash
 
 
 class SignUpResource(Resource):
@@ -68,21 +69,26 @@ class LoginResource(Resource):
         if not users:
             return {"ok": False, "code": 403, "message": "Invalid login credentials"}, 403
         if username in db.users:
+            user = db.users.get(username)
             payload = {
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
                 "iat": datetime.datetime.utcnow(),
-                "data": db.users.get(username).json
+                "data": user.json
             }
+            if not check_password_hash(user.password, password):
+                return {"message": "Invalid login credentials"}, 403
             token = jwt.encode(payload=payload, key=key)
-            return {"token": token, "message": "You are successfuly logged in"}, 200
+            return {"token": token, "message": "You are successfully logged in"}, 200
         if username in db.emails:
             user = db.users.get(db.emails.get(username, None), None)
             if user is None:
                 return {"message": "Invalid login credentials"}, 403
+            if not check_password_hash(user.password, password):
+                return {"message": "Invalid login credentials"}, 403
             payload = {
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
                 "iat": datetime.datetime.utcnow(),
-                "data": db.users.get(username).json
+                "data": user.json
             }
             token = jwt.encode(payload=payload, key=key)
             return {"token": token, "message": "You are successfully logged in"}, 200
