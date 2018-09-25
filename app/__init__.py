@@ -18,11 +18,11 @@ def create_app(config_name):
     app.url_map.strict_slashes = False
 
     with app.app_context():
-        from app.resources.products import ProductResource
+        from app.resources.products import MealResource
         from app.resources.orders import OrderResource
         from app.resources.addresses import AddressResource
         from app.resources.users import UserResource
-    api.add_resource(ProductResource, "/api/v1/products")
+    api.add_resource(MealResource, "/api/v1/products")
     api.add_resource(OrderResource, "/api/v1/orders",
                      "/api/v1/orders/<int:order_id>")
     api.add_resource(AddressResource, "/api/v1/addresses",

@@ -3,7 +3,7 @@ from app.models import Product
 from app.db import db
 
 
-class ProductResource(Resource):
+class MealResource(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument("product_name", required=True,
                         help="Missing product name")
@@ -14,7 +14,7 @@ class ProductResource(Resource):
     def post(self, product_id=None):
         """A method to create a new product or
         modify one if it a product_id is specified"""
-        args = ProductResource.parser.parse_args()
+        args = MealResource.parser.parse_args()
         product_name = args.get("product_name")
         product_description = args.get("product_description")
         unit_price = args.get("unit_price")

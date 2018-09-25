@@ -22,23 +22,23 @@ class TestModel(BaseTest, TestCase):
         self.assertEqual(after_save.status_code, 200)
         # print(after_save.data)
 
-    def test_can_add_product_if_admin(self):
+    def test_can_add_menu_item_if_admin(self):
         # This will be done after the auth module
         pass
 
-    def test_can_delete_product(self):
+    def test_can_delete_menu_item(self):
         pass
 
-    def test_can_update_product(self):
+    def test_can_update_menu_item(self):
         pass
 
     def test_can_update_user(self):
         pass
 
-    def test_can_udpate_product(self):
+    def test_can_udpate_menu_item(self):
         pass
 
-    def test_can_not_update_product_not_admin(self):
+    def test_can_not_update_menu_item_not_admin(self):
         pass
 
     def test_can_add_address(self):
