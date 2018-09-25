@@ -13,7 +13,7 @@ def validate_email(email):
 
 
 def validate_password(password):
-    if not isinstance(str, password):
+    if not isinstance(password, str):
         return False
     ans = re.match(r"(?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{6,12}", password)
     if ans is None:
