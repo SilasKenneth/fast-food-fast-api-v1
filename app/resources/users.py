@@ -71,7 +71,7 @@ class LoginResource(Resource):
             payload = {
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
                 "iat": datetime.datetime.utcnow(),
-                "data": db.users.get(username)
+                "data": db.users.get(username).json
             }
             token = jwt.encode(payload=payload, key=key)
             return {"token": token, "message": "You are successfuly logged in"}, 200
@@ -79,11 +79,10 @@ class LoginResource(Resource):
             user = db.users.get(db.emails.get(username, None), None)
             if user is None:
                 return {"message": "Invalid login credentials"}, 403
-
             payload = {
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
                 "iat": datetime.datetime.utcnow(),
-                "data": db.users.get(username)
+                "data": db.users.get(username).json
             }
             token = jwt.encode(payload=payload, key=key)
             return {"token": token, "message": "You are successfully logged in"}, 200
