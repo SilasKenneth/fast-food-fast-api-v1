@@ -71,14 +71,14 @@ class LoginResource(Resource):
         if username in db.users:
             user = db.users.get(username)
             payload = {
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
-                "iat": datetime.datetime.utcnow(),
+                "exp": str(datetime.datetime.utcnow() + datetime.timedelta(minutes=10)),
+                "iat": str(datetime.datetime.utcnow()),
                 "data": user.json
             }
             if not check_password_hash(user.password, password):
                 return {"message": "Invalid login credentials"}, 403
-            token = jwt.encode(payload=payload, key=key)
-            return {"token": token, "message": "You are successfully logged in"}, 200
+            token = jwt.encode(payload=payload, key=key).decode("utf-8")
+            return {"message": "You are successfully logged in", "token": token}, 200
         if username in db.emails:
             user = db.users.get(db.emails.get(username, None), None)
             if user is None:
@@ -86,12 +86,12 @@ class LoginResource(Resource):
             if not check_password_hash(user.password, password):
                 return {"message": "Invalid login credentials"}, 403
             payload = {
-                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=10),
-                "iat": datetime.datetime.utcnow(),
+                "exp": str(datetime.datetime.utcnow() + datetime.timedelta(minutes=10)),
+                "iat": str(datetime.datetime.utcnow()),
                 "data": user.json
             }
-            token = jwt.encode(payload=payload, key=key)
-            return {"token": token, "message": "You are successfully logged in"}, 200
+            token = jwt.encode(payload=payload, key=key).decode("utf-8")
+            return {"message": "You are successfully logged in", "token": token}, 200
         return {"message": "Invalid login credentials"}, 403
 
 
