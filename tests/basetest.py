@@ -25,6 +25,7 @@ class BaseTest(TestCase):
         self.database.add_menu_item(self.product2)
         self.database.add_menu_item(self.product3)
         self.database.add_menu_item(self.product4)
+        self.silas.add_address(self.silas_address)
         self.database.add_user(self.silas)
         self.silas.add_address(self.silas_address)
         self.test_admin.is_admin = True

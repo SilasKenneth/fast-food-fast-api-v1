@@ -143,7 +143,7 @@ class Address(Base):
 class Order(object):
     """The order model class"""
 
-    def __init__(self, order_by, address, items):
+    def __init__(self, order_by, address, items=None):
         """Constructor of the order class"""
         self.id = max(db.order_maps) + 1 if len(db.order_maps) > 0 else 1
         self.ordered_by = order_by

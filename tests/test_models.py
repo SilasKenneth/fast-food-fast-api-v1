@@ -16,7 +16,6 @@ class TestModel(BaseTest, TestCase):
         try_post = self.client.post("/api/v1/users", data=json.dumps(user_test.json), content_type="application/json")
         after_save = self.client.get("/api/v1/users/" + str(user_test.id), content_type="application/json")
         tester = self.client.get("/api/v1/users/2", content_type="application/json")
-        print(tester.data)
         self.assertEqual(user_test.username, user_test.username)
         self.assertEqual(try_post.status_code, 200)
         self.assertEqual(after_save.status_code, 200)

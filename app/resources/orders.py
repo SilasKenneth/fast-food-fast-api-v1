@@ -46,30 +46,36 @@ class OrderResource(Resource):
                                  help="You cannot order nothing "
                                       "please specify some items")
         args = self.parser.parse_args()
-        user_id = args.get("user_id")
-        address = args.get("address")
-        items = args.get("items")
+        user_id = args.get("user_id", "")
+        address = args.get("address", "")
+        items = args.get("items", "")
         if empty(user_id) or empty(address) or empty(items):
             return {"ok": False, "code": "400",
                     "message": "Please make sure you have no missing "
                                "requirements for an order"}, 400
+
         def checker0(y):
-            if isinstance(y, str):
+            if not isinstance(y, str) and not isinstance(y, int):
                 return None
+            y = str(y)
             if not y.isnumeric():
                 return None
             return User.get_by_id(int(y))
-        user = User.get_by_id(int(user_id))
+
+        user = checker0(user_id)
         if user is None:
             return {"ok": False, "code": "400",
                     "message": "Could not recognize the person who's "
                                "trying to place the order"}, 400
+
         def checker(y):
-            if isinstance(y, str):
+            if not isinstance(y, str) and not isinstance(y, int):
                 return None
+            y = str(y)
             if not y.isnumeric():
                 return None
             return Address.find_by_id(int(y))
+
         add = checker(address)
         if add is None:
             return {"ok": False, "code": "404",
@@ -81,8 +87,9 @@ class OrderResource(Resource):
         if not items:
             return {"ok": False, "code": 403, "message": "Please specify"
                                                          "items to complete the request"}, 403
+
         def found(y):
-            if not isinstance(y, str):
+            if not isinstance(y, str) and not isinstance(y, int):
                 return None
             if not str(y).isnumeric():
                 return None
