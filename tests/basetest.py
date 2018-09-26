@@ -40,8 +40,14 @@ class BaseTest(TestCase):
             "phone": "0791350402",
             "street": "Kondele"
         }
+        self.item_without_name = {
+            "name": "",
+            "description": "Sushi from Japan",
+            "price": 300
+        }
         self.user_test = {"username": "silaskenn", "password": "SilasK@2018"}
         self.ORDER_URL = "/api/v1/orders"
+        self.MENU_URL = "/api/v1/menu"
         self.test_admin = User("admin", "admin@admin.com", "admin")
         self.database.add_menu_item(self.product2)
         self.database.add_menu_item(self.product3)

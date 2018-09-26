@@ -15,10 +15,14 @@ class TestOrders(BaseTest):
     def test_user_can_order_multiple_items(self):
         result = self.client.post(self.ORDER_URL, data=json.dumps(self.multiple), content_type="application/json")
         response = json.loads(result.data)
+        self.assertEqual(response.get("message", None), "You successfully placed the order thank you")
 
     def test_user_can_order_one_item(self):
-        response = self.client.get("/api/v1/users", content_type="application/json")
-        self.assertEqual(response.status_code, 200)
+        res = self.client.post(self.ORDER_URL,  data=json.dumps(self.single_valid), content_type="application/json")
+        response = res.data
+        response = json.loads(response)
+        self.assertEqual(response.get("message", None), "You successfully placed the order thank you")
+        self.assertEqual(res.status_code, 200)
 
     def test_user_cannot_order_without_address(self):
         response = self.client.post("/api/v1/orders", data=json.dumps({"user_id": 1, "items": "1,2,3", "address": ""}),
