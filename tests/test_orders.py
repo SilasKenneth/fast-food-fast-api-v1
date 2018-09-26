@@ -20,8 +20,8 @@ class TestOrders(BaseTest):
     def test_user_can_order_one_item(self):
         res = self.client.post(self.ORDER_URL,  data=json.dumps(self.single_valid), content_type="application/json")
         response = res.data
-        response = json.loads(response)
-        self.assertEqual(response.get("message", None), "You successfully placed the order thank you")
+        response_obj = json.loads(response)
+        self.assertEqual(response_obj.get("message", None), "You successfully placed the order thank you")
         self.assertEqual(res.status_code, 200)
 
     def test_user_cannot_order_without_address(self):
@@ -40,9 +40,10 @@ class TestOrders(BaseTest):
 
     def test_order_update_admin(self):
         posted = self.client.post(self.ORDER_URL, data=json.dumps(self.single_valid), content_type="application/json")
-        response = self.client.put(self.ORDER_URL+"/1", data=json.dumps({"status": "complete"}), content_type="application/json")
+        response = self.client.put(self.ORDER_URL+"/1", data=json.dumps({"status": "Complete"}), content_type="application/json")
         response_obj = json.loads(response.data)
         posted_obj = json.loads(posted.data)
+        print(response_obj)
         self.assertEqual(posted.status_code, 200)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(posted_obj.get("data", {}).get("status", None), "pending")

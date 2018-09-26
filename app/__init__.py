@@ -27,8 +27,8 @@ def create_app(config_name):
                      "/api/v1/orders/<int:order_id>")
     api.add_resource(AddressResource, "/api/v1/addresses",
                      "/api/v1/addresses/<int:address_id>")
-    api.add_resource(LoginResource, "/api/v1/users/login")
-    api.add_resource(SignUpResource, "/api/v1/users/signup")
+    api.add_resource(LoginResource, "/api/v1/auth/login")
+    api.add_resource(SignUpResource, "/api/v1/auth/signup")
 
     @app.errorhandler(404)
     def error_404(e):
