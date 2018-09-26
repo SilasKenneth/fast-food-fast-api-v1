@@ -6,13 +6,13 @@ from tests.basetest import BaseTest
 
 class TestOrders(BaseTest):
     def test_user_can_order_successfully(self):
-        order = Order(self.gloria, self.gloria_address)
+        order = Order(self.gloria, self.gloria_address, "1, 2,3")
         order.place(self.silas.id, 1, "1")
         self.assertEqual(1, 1)
 
     # @pytest.mark.skip("Skip this")
     def test_user_can_order_multiple_items(self):
-        order = Order(self.silas, self.silas_address)
+        order = Order(self.silas, self.silas_address, "1,2,3")
         order.place(self.silas.id, 1, "1,2,4")
         self.assertEqual(1, 1)
 
