@@ -12,41 +12,22 @@ class TestModel(BaseTest, TestCase):
 
     def test_can_add_user(self):
         random_user = "jadedness"
-        user_test = User(random_user, random_user + "@gmail.com", "silas")
-        try_post = self.client.post("/api/v1/users", data=json.dumps(user_test.json), content_type="application/json")
-        after_save = self.client.get("/api/v1/users/" + str(user_test.id), content_type="application/json")
-        tester = self.client.get("/api/v1/users/2", content_type="application/json")
-        self.assertEqual(user_test.username, user_test.username)
+        user_test = {"username":random_user, "email": random_user + "@gmail.com", "password": "SilasK@2018"}
+        user_test.update({"confirm_pass": "SilasK@2018"})
+        self.user_test.update({"username": random_user})
+        try_post = self.client.post("/api/v1/users/signup", data=json.dumps(user_test), content_type="application/json")
+        try_login = self.client.post("/api/v1/users/login", data=json.dumps(self.user_test), content_type="application/json")
+        try_post_obj = json.loads(try_post.data)
+        try_login_obj = json.loads(try_login.data)
         self.assertEqual(try_post.status_code, 200)
-        self.assertEqual(after_save.status_code, 200)
+        self.assertEqual(try_post_obj.get("message", None), "User was successfully saved login to get started")
+        self.assertEqual(try_login_obj.get("message", None), "You are successfully logged in")
         # print(after_save.data)
 
-    def test_can_add_menu_item_if_admin(self):
-        # This will be done after the auth module
-        pass
-
-    def test_can_delete_menu_item(self):
-        pass
-
-    def test_can_update_menu_item(self):
-        pass
-
-    def test_can_update_user(self):
-        pass
-
-    def test_can_udpate_menu_item(self):
-        pass
-
-    def test_can_not_update_menu_item_not_admin(self):
-        pass
-
+    def test_can_add_menu_item_admin(self):
+        response = self.client.post("/api/v1/menu", data=json.dumps(self.product1.json), content_type="application/json")
+        print(response.data)
     def test_can_add_address(self):
         address = self.silas_address
         self.silas.add_address(address)
         # To be done
-
-    def test_can_delete_address(self):
-        pass
-
-    def test_can_update_address(self):
-        pass
