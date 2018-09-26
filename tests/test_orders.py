@@ -20,8 +20,8 @@ class TestOrders(BaseTest):
     def test_user_can_order_one_item(self):
         res = self.client.post(self.ORDER_URL,  data=json.dumps(self.single_valid), content_type="application/json")
         response = res.data
-        response = json.loads(response)
-        self.assertEqual(response.get("message", None), "You successfully placed the order thank you")
+        response_obj = json.loads(response)
+        self.assertEqual(response_obj.get("message", None), "You successfully placed the order thank you")
         self.assertEqual(res.status_code, 200)
 
     def test_user_cannot_order_without_address(self):
