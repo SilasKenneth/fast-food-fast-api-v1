@@ -9,7 +9,7 @@ class MenuResource(Resource):
                         help="Missing menu item name")
     parser.add_argument("description", required=True,
                         help="Missing menu item description")
-    parser.add_argument("unit_price", required=True, help="Missing prices")
+    parser.add_argument("price", required=True, help="Missing prices")
 
     def post(self, product_id=None):
         """A method to create a new product or
