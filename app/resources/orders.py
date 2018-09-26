@@ -148,7 +148,7 @@ class OrderResource(Resource):
         if len(status.strip()) == 0:
             return {"code": 400, "ok": False,
                     "message": "Please specify a valid status"}, 400
-        if status not in ["pending", "accepted", "complete", "rejected"]:
+        if status not in ["New", "Processing", "Canceled", "Complete"]:
             return {"message": "Please specify a valid status statuses are complete, pending, rejected or accepted"}
         order = db.order_maps.get(order_id)
         if order is None:
