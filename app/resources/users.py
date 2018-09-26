@@ -95,8 +95,8 @@ class LoginResource(Resource):
             token = jwt.encode(payload=payload, key=key).decode("utf-8")
             return {"message": "You are successfully logged in", "token": token}, 200
         return {"message": "Invalid login credentials"}, 403
-    
-    
+
+
 class UserProfileResource(Resource):
     def get(self, user_id=None):
         if user_id is None:
