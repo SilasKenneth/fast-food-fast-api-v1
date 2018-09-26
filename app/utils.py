@@ -6,7 +6,7 @@ def validate_email(email):
         return False
     if len(email) <= 7:
         return False
-    ans = re.match("^.+@(\[?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email)
+    ans = re.match("^.+@(\\[?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email)
     if ans is None:
         return False
     return True

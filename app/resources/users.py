@@ -24,8 +24,8 @@ class SignUpResource(Resource):
         username = args.get("username", "")
         email = args.get("email", "")
         password = args.get("password", "")
-
-        if empty(username) or empty(email) or empty(password):
+        confirm_pass = args.get("confirm_pass", "")
+        if empty(username) or empty(email) or empty(password) or empty(confirm_pass):
             return {"code": "400", "message": "All fields are required"}, 200
         if not validate_email(email):
             return {"message": "You have entered an invalid email address"}
@@ -40,6 +40,8 @@ class SignUpResource(Resource):
                                "and atleast should be between 6 to 12 characters"
                                "long"}
         new_user = User(username, email, password)
+        if not check_password_hash(new_user.password, confirm_pass):
+            return {"ok": False, "code": 403, "message": "The password and the confirmation doesn't match"}, 403
         db.add_user(new_user)
         db.emails.update({new_user.email: new_user.username})
         return {"ok": True, "message": "User was successfully saved login to get started",
@@ -93,6 +95,13 @@ class LoginResource(Resource):
             token = jwt.encode(payload=payload, key=key).decode("utf-8")
             return {"message": "You are successfully logged in", "token": token}, 200
         return {"message": "Invalid login credentials"}, 403
+
+
+class UserProfileResource(Resource):
+    def get(self, user_id=None):
+        if user_id is None:
+            return {"ok": True, "data": User.all()}
+
 
 
 

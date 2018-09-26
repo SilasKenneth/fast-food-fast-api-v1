@@ -44,7 +44,6 @@ class User(Base):
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "password": self.password,
             "addresses": [address.json for address in self.addresses
                           if isinstance(address, Address)]
         }
@@ -101,7 +100,7 @@ class Address(Base):
 
     def __init__(self, town, street, phone):
         """ Constructor for the model class"""
-        self.id = max(db.address_maps) + 1 if len(db.address_maps) > 0 else 1
+        self.id = len(db.address_maps) + 1 if len(db.address_maps) > 0 else 1
         self.town = town
         self.street = street
         self.phone = phone
@@ -143,7 +142,7 @@ class Address(Base):
 class Order(object):
     """The order model class"""
 
-    def __init__(self, order_by, address):
+    def __init__(self, order_by, address, items=None):
         """Constructor of the order class"""
         self.id = max(db.order_maps) + 1 if len(db.order_maps) > 0 else 1
         self.ordered_by = order_by
@@ -230,9 +229,9 @@ class Product(object):
         """Make the class json serializable"""
         return {
             "id": self.id,
-            "product_name": self.product_name,
-            "product_description": self.product_description,
-            "unit_price": self.unit_price
+            "name": self.product_name,
+            "description": self.product_description,
+            "price": self.unit_price
         }
 
     @classmethod
