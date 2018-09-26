@@ -18,17 +18,17 @@ def create_app(config_name):
     app.url_map.strict_slashes = False
 
     with app.app_context():
-        from app.resources.products import ProductResource
+        from app.resources.products import MenuResource
         from app.resources.orders import OrderResource
         from app.resources.addresses import AddressResource
-        from app.resources.users import UserResource
-    api.add_resource(ProductResource, "/api/v1/products")
+        from app.resources.users import LoginResource, SignUpResource
+    api.add_resource(MenuResource, "/api/v1/menu")
     api.add_resource(OrderResource, "/api/v1/orders",
                      "/api/v1/orders/<int:order_id>")
     api.add_resource(AddressResource, "/api/v1/addresses",
                      "/api/v1/addresses/<int:address_id>")
-    api.add_resource(UserResource, "/api/v1/users",
-                     "/api/v1/users/<int:user_id>")
+    api.add_resource(LoginResource, "/api/v1/users/login")
+    api.add_resource(SignUpResource, "/api/v1/users/signup")
 
     @app.errorhandler(404)
     def error_404(e):

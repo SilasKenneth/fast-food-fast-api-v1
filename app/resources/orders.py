@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from app.db import db
 from app.models import Order, User, Product, Address
-
+from app.utils import empty
 
 class OrderResource(Resource):
     parser = reqparse.RequestParser()
@@ -35,9 +35,6 @@ class OrderResource(Resource):
 
     def post(self, order_id=None):
         """A method to create a new order or modify an existing order"""
-
-        def empty(st):
-            return len(st.strip()) == 0
 
         if order_id is None or order_id == 0:
             self.parser.add_argument("user_id", required=True,

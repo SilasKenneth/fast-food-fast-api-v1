@@ -5,6 +5,7 @@ class Config(object):
     """Base config class """
     DEBUG = False
     SECRET_KEY = os.getenv("SECRET_KEY")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "s01doutuutuutu")
 
 
 class Development(Config):

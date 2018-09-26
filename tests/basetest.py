@@ -21,10 +21,10 @@ class BaseTest(TestCase):
         self.gloria_address = Address("Kericho", "Kiserian", "0728828288")
         self.database = db
         self.test_admin = User("admin", "admin@admin.com", "admin")
-        self.database.add_product(self.product1)
-        self.database.add_product(self.product2)
-        self.database.add_product(self.product3)
-        self.database.add_product(self.product4)
+        self.database.add_menu_item(self.product1)
+        self.database.add_menu_item(self.product2)
+        self.database.add_menu_item(self.product3)
+        self.database.add_menu_item(self.product4)
         self.database.add_user(self.silas)
         self.silas.add_address(self.silas_address)
         self.test_admin.is_admin = True

@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from app.models import Address, User
 from app.db import db
+from app.utils import empty
 
 
 class AddressResource(Resource):
@@ -40,9 +41,6 @@ class AddressResource(Resource):
         town = args.get("town")
         street = args.get("street")
         phone = args.get("phone")
-
-        def empty(st):
-            return len(st.strip()) == 0
 
         if empty(town) or empty(street) or empty(phone):
             return {"code": "500", "message": "Please provide all the details "

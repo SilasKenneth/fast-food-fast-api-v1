@@ -219,7 +219,7 @@ class Product(object):
     """The product model class"""
     def __init__(self, product_name, product_description, unit_price):
         """Constructor for the product model"""
-        self.id = len(db.products) + 1
+        self.id = len(db.menu) + 1
         self.product_name = product_name
         self.product_description = product_description
         self.last_update = datetime.datetime.utcnow()
@@ -238,7 +238,7 @@ class Product(object):
     @classmethod
     def get_by_id(cls, product_id):
         """Get an item by it's id"""
-        products = db.products
+        products = db.menu
         if len(products) == 0:
             return None
         for product in products:
@@ -249,7 +249,7 @@ class Product(object):
     @classmethod
     def all(cls):
         """A method to fetch all menu items from the data structure"""
-        products = db.products
+        products = db.menu
         if len(products) == 0:
             return None
         return [product.json for product in products]
