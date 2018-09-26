@@ -1,11 +1,7 @@
 import json
-
 from unittest import TestCase
 
 from tests.basetest import BaseTest
-from app.models import (User)
-import string
-import random
 
 
 class TestModel(BaseTest, TestCase):
