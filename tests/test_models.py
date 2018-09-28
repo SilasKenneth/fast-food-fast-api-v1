@@ -59,6 +59,10 @@ class TestModel(BaseTest, TestCase):
     def test_existing_menu_item(self):
         response = self.client.post("/api/v1/menu", data=json.dumps(self.product1.json),
                                     content_type="application/json")
+        response1 = self.client.post("/api/v1/menu", data=json.dumps(self.product1.json),
+                                    content_type="application/json")
         response_obj = json.loads(response.data)
+        response_obj1 = json.loads(response1.data)
+        self.assertEqual(response_obj.get("message", None), "The menu item was saved successfully")
         self.assertEqual(response_obj.get("message", None), "The menu item was saved successfully")
         self.assertEqual(response.status_code, 200)
