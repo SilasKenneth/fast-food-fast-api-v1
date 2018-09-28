@@ -22,7 +22,7 @@ def create_app(config_name):
         from app.resources.orders import OrderResource
         from app.resources.addresses import AddressResource
         from app.resources.users import LoginResource, SignUpResource
-    api.add_resource(MenuResource, "/api/v1/menu", "/api/v1/menu/<int:ids>")
+    api.add_resource(MenuResource, "/api/v1/menu", "/api/v1/menu/<int:product_id>")
     api.add_resource(OrderResource, "/api/v1/orders",
                      "/api/v1/orders/<int:order_id>")
     api.add_resource(AddressResource, "/api/v1/addresses",
