@@ -64,5 +64,5 @@ class TestModel(BaseTest, TestCase):
         response_obj = json.loads(response.data)
         response_obj1 = json.loads(response1.data)
         self.assertEqual(response_obj.get("message", None), "The menu item was saved successfully")
-        self.assertEqual(response_obj.get("message", None), "The menu item was saved successfully")
+        self.assertEqual(response_obj1.get("message", None), "The product with name Wet Fry already exists")
         self.assertEqual(response.status_code, 200)
