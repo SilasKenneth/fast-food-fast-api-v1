@@ -45,6 +45,18 @@ class BaseTest(TestCase):
             "description": "Sushi from Japan",
             "price": 300
         }
+        self.new_user = {
+           "username":"jameskey",
+           "email": "jameskey@gmail.com",
+           "password": "SilasK@2019",
+           "confirm_pass": "SilasK@2019"
+        }
+        self.new_user1 = {
+           "username":"jameskeys",
+           "email": "jameskey@gmail.com",
+           "password": "SilasK@2019",
+           "confirm_pass": "SilasK@2019"
+        }
         self.user_test = {"username": "silaskenn", "password": "SilasK@2018"}
         self.ORDER_URL = "/api/v1/orders"
         self.MENU_URL = "/api/v1/menu"

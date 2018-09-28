@@ -34,6 +34,9 @@ class MenuResource(Resource):
         if not valid(unit_price):
             return {"message": "The menu item should have a valid"
                                "price", "ok": False, "code": 403}, 403
+        exists = Product.exists(product_name)
+        if exists:
+            return {"message": "The product with name %s already exists"% product_name}, 400
         pro = Product(product_name, product_description, unit_price)
         db.add_menu_item(pro)
         return {"ok": True, "message": "The menu item was saved successfully",

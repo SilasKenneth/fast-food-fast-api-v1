@@ -93,7 +93,13 @@ class User(Base):
         for user in users:
             res.append(users[user].json)
         return res
-
+    @classmethod
+    def exists(self, username):
+        if username in db.users:
+            return True
+        if username in db.emails:
+            return True
+        return False
 
 class Address(Base):
     """ This is the address model to cater for user addresses. """
@@ -252,3 +258,12 @@ class Product(object):
         if len(products) == 0:
             return None
         return [product.json for product in products]
+    @classmethod
+    def exists(self, name):
+        items = db.menu
+        if not items:
+            return False
+        for item in items:
+            if items[item].product_name == name:
+                return True
+        return False

@@ -39,6 +39,12 @@ class SignUpResource(Resource):
                                "atleast one lowercase and atleast a number"
                                "and atleast should be between 6 to 12 characters"
                                "long"}
+        exists = User.exists(username)
+        exists1 = User.exists(email)
+        if exists:
+            return {"message": "The username already in user"}, 400
+        if exists1:
+            return {"message": "The email already in use"}, 400
         new_user = User(username, email, password)
         if not check_password_hash(new_user.password, confirm_pass):
             return {"ok": False, "code": 403, "message": "The password and the confirmation doesn't match"}, 403

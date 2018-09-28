@@ -41,3 +41,24 @@ class TestModel(BaseTest, TestCase):
         response_obj = json.loads(response.data)
         self.assertEqual(response_obj.get("message", None), "The address was successfully added")
         self.assertEqual(response.status_code, 200)
+    def test_existing_email(self):
+        response = self.client.post("/api/v1/auth/signup", data=json.dumps(self.new_user),
+                                    content_type="application/json")
+        response1 = self.client.post("/api/v1/auth/signup", data=json.dumps(self.new_user1),
+                                    content_type="application/json")
+        response2 = self.client.post("/api/v1/auth/signup", data=json.dumps(self.new_user),
+                                    content_type="application/json"
+                                     )
+        response_obj = json.loads(response.data)
+        response_obj1 = json.loads(response1.data)
+        response_obj2 = json.loads(response2.data)
+        self.assertEqual(response_obj.get("message", None), "User was successfully saved login to get started")
+        self.assertEqual(response_obj1.get("message", None), "The email already in use")
+        self.assertEqual(response_obj2.get("message", None), "The username already in user")
+        self.assertEqual(response.status_code, 200)
+    def test_existing_menu_item(self):
+        response = self.client.post("/api/v1/menu", data=json.dumps(self.product1.json),
+                                    content_type="application/json")
+        response_obj = json.loads(response.data)
+        self.assertEqual(response_obj.get("message", None), "The menu item was saved successfully")
+        self.assertEqual(response.status_code, 200)
