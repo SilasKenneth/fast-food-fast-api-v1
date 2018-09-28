@@ -45,7 +45,7 @@ class MenuResource(Resource):
         """
         if product_id is not None:
             return {"data": Product.get_by_id(product_id)}
-        products = db.products
+        products = db.menu
         if len(products) == 0:
             return {"ok": True, "code": "404",
                     "message": "No menu items are currently "
