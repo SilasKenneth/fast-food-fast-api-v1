@@ -44,7 +44,10 @@ class MenuResource(Resource):
         product_id is not None
         """
         if product_id is not None:
-            return {"data": Product.get_by_id(product_id)}
+            order = Product.get_by_id(product_id)
+            if order is None:
+                return {"message": "The menu item with the id %s does not exists"% product_id}
+            return {"data": order}
         products = db.menu
         if len(products) == 0:
             return {"ok": True, "code": "404",
