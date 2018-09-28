@@ -171,7 +171,7 @@ class Order(object):
             "total": str(self.total),
             "status": str(self.status)
         }
-
+    @classmethod
     def json1(self):
         """Return a dictionary representation of the class without items"""
         return {
