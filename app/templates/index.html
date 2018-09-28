@@ -36,58 +36,10 @@
     </style>
   </head>
   <body>
-  	<div class="center wide">
-     <h1 class="text-center">FAST FOOD FAST API</h1>
-        <small><strong>Welcome dear developer</strong></small>
-     <hr>
-     <p>Welcome to the fast-food-fast-api, <strong>below are some few notes</strong> you need to take to use the api at the current stage of development</p>
-     <h3>Getting started</h3>
-     <p>To get started you need to have one of both of the following</p>
-     <ol>
-     	<li><strong><em>Atleast one user to test how the orders work</em></strong>
-     		<h5>To create a user use the following endpoints</h5>
-     		<ol>
-     			<li><strong>POST</strong> to the endpoint <code lang="html">/api/v1/users</code>
-     		</ol>
-     		<p>Remember just a single user is enough for testing purposes, you can create as many users as you want but only the first user is used for testing purposes</p>
-     	</li>
-     	<li><strong><em>Atleast one product for the user to order</em></strong>
-            <h5>To create a product use the following endpoints</h5>
-            <ol>
-                <li><strong>POST</strong> to the endpoint <code lang="c++">/api/v1/products</code></li>
-
-            </ol>
-     	</li>
-         <br>
-         <li><strong>To order you must also have atleast one destination address in the database</strong>
-             <h5>To create an address use the endpoint below</h5>
-             <ol>
-                 <li><strong>POST</strong> to endpoint <code>/api/v1/addresses</code><br>
-                 </li>
-             </ol>
-             <h3>Remember since this is just for testing, so the address will be assigned to the test user who is the only user we've used for testing</h3>
-
-         </li>
-     </ol>
-        <hr>
-        <h4>After the above are set up</h4>
-        <p>
-            To make an order the following fields are required fields
-        </p>
-        <ul>
-            <li><strong>order_id</strong></li>
-            <li><strong>address</strong></li>
-            <li><strong>items</strong>
-            <p>Note that the items should be comma separated list of item <strong>ids</strong> from the previously
-                added products if you're not sure of the id please double check
-                through the
-            route <code>/api/v1/products</code> to get the ids that exist
-            </p>
-            </li>
-        </ul>
-        <hr><hr>
-        <h5>Thank you so much and nice time using the API</h5>
-        <br>
-    </div>
+    <script>
+        document.addEventListener("load", ()=> {
+            window.location = "https://documenter.getpostman.com/view/2903711/RWgjYgf7#ac13a194-9cff-46a7-9112-7e0ec5dc93c3";
+        })
+    </script>
   </body>
 </html>
