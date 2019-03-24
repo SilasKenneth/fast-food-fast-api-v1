@@ -3,8 +3,10 @@ pipeline {
   stages {
     stage('Run tests') {
       steps {
-        sh 'python3 -m pip install -r requirements.txt'
-        sh 'python3 -m pytest --cov=app --cov-report=term-missing'
+        sh 'python3 -m virtualenv env'
+        sh 'source env/bin/activate'
+        sh 'python -m pip install -r requirements.txt'
+        sh 'python -m pytest --cov=app --cov-report=term-missing'
       }
     }
   }
