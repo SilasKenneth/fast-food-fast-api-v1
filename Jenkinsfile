@@ -4,6 +4,7 @@ pipeline {
     stage('Run tests') {
       steps {
         echo 'Hello world'
+        sh 'python3 -m pytest --cov=app --cov-report=term-missing'
       }
     }
   }
