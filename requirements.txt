@@ -22,7 +22,7 @@ py==1.6.0
 pytest==3.8.0
 pytest-cov==2.6.0
 pytz==2018.5
-requests==2.19.1
+requests==2.32.2
 six==1.11.0
 urllib3==1.26.18
 Werkzeug==0.14.1
